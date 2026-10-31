@@ -1,0 +1,6 @@
+# Personal data exported from the app (Data & backup)
+trailform-backup-*.json
+*.xlsx
+
+# macOS
+.DS_Store

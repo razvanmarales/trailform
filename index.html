@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#111a17">
+    <meta name="description" content="Your personal MTB hub for skills, training, competitions, bikes, and gear.">
+    <title>Trailform — your MTB, one place</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="skill-catalog.js" defer></script>
+    <script src="bike-types.js" defer></script>
+    <script src="competition-calendar.js" defer></script>
+    <script src="vendor/exceljs.min.js" defer></script>
+    <script src="export-workbook.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="App navigation">
+        <div class="sidebar-header">
+        <a class="brand" href="#overview" aria-label="Trailform overview">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 36 36" fill="none">
+              <path d="M4 26.5 13.2 12l5.1 8 4.5-6 9.2 12.5H4Z" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/>
+              <circle cx="18" cy="27" r="2" fill="currentColor"/>
+            </svg>
+          </span>
+          <span>trailform<span class="brand-period">.</span></span>
+        </a>
+          <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="navigation-panel">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+            <span id="menu-toggle-label">Menu</span>
+          </button>
+        </div>
+        <div class="sidebar-content" id="navigation-panel">
+          <nav class="main-nav" id="main-nav" aria-label="MTB hub">
+            <span class="nav-label">YOUR RIDING</span>
+            <button class="nav-link active" type="button" data-page="overview" aria-current="page"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Overview</button>
+            <button class="nav-link" type="button" data-page="skills"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 17 6-6 4 3 8-10M15 4h6v6"/></svg>Skills</button>
+            <button class="nav-link" type="button" data-page="training"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></svg>Training</button>
+            <button class="nav-link" type="button" data-page="competitions"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4m0 0c5-5 9 5 14 0v10c-5 5-9-5-14 0"/></svg>Competitions</button>
+            <button class="nav-link" type="button" data-page="goals"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg>Goals &amp; notes</button>
+            <span class="nav-label">YOUR SETUP</span>
+            <button class="nav-link" type="button" data-page="bikes"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="16" r="4"/><circle cx="19" cy="16" r="4"/><path d="m5 16 5-9 5 9H5m5-9h6l3 9M8 7H6m10 0V4h3"/></svg>Bikes &amp; service</button>
+            <button class="nav-link" type="button" data-page="gear"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 7 9-4 9 4v10l-9 4-9-4V7Zm0 0 9 4 9-4M12 11v10M7 5l10 4"/></svg>Gear &amp; purchases</button>
+          </nav>
+          <div class="sidebar-bottom">
+            <details class="data-tools">
+              <summary>Data &amp; backup <span aria-hidden="true">+</span></summary>
+              <p>Export all your data as a restorable JSON backup or a readable Excel workbook. Everything stays on this device.</p>
+              <button class="secondary-button" id="export-button" type="button">Export JSON</button>
+              <button class="secondary-button" id="export-excel-button" type="button">Export Excel (.xlsx)</button>
+              <button class="secondary-button" id="import-button" type="button">Import JSON backup</button>
+              <p>Importing JSON replaces your current records. Excel is for reading and analysis.</p>
+              <input id="import-file" type="file" accept="application/json,.json" hidden>
+            </details>
+            <div class="user-chip"><span class="user-avatar" aria-hidden="true">R</span><div><strong id="rider-name">Rider</strong><span>Personal workspace</span></div></div>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <span id="breadcrumb-current">Overview</span>
+          <span class="local-status">Personal MTB hub</span>
+        </header>
+
+        <div class="notice" id="app-notice" role="status" hidden></div>
+        <div id="page-content" tabindex="-1"></div>
+        <footer class="page-footer">
+          <span>TAKE IT ONE TRAIL AT A TIME.</span>
+          <span>Train within your comfort zone. Wear protective gear and choose suitable terrain.</span>
+        </footer>
+      </main>
+    </div>
+
+    <dialog class="editor-dialog" id="editor-dialog" aria-labelledby="dialog-title">
+      <form id="editor-form" novalidate>
+        <div class="dialog-top">
+          <div>
+            <p class="eyebrow"><span class="eyebrow-line"></span><span id="dialog-eyebrow">YOUR MTB HUB</span></p>
+            <h2 id="dialog-title" tabindex="-1">Add a record<span class="heading-period">.</span></h2>
+          </div>
+          <button class="icon-button" id="dialog-close" type="button" aria-label="Close dialog">×</button>
+        </div>
+        <div id="skill-detail-content" hidden></div>
+        <h3 class="skill-progress-heading" id="skill-progress-heading" hidden>Your personal progress</h3>
+        <div class="form-grid" id="form-fields"></div>
+        <div id="bike-type-preview" aria-live="polite" hidden></div>
+        <p class="form-error" id="form-error" role="alert" hidden></p>
+        <div class="dialog-actions">
+          <button class="text-button skill-reset-button" id="skill-reset-button" type="button" hidden>Reset tracking</button>
+          <button class="secondary-button" id="dialog-cancel" type="button">Cancel</button>
+          <button class="primary-button" id="dialog-save" type="submit">Save record <span aria-hidden="true">↗</span></button>
+        </div>
+      </form>
+    </dialog>
+    <dialog class="editor-dialog race-dialog" id="race-dialog" aria-labelledby="race-dialog-title">
+      <div id="race-dialog-content"></div>
+      <p class="race-dialog-status" id="race-dialog-status" role="status" aria-live="polite"></p>
+    </dialog>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>

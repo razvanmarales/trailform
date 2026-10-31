@@ -1,0 +1,6 @@
+trail-rider-hero.jpg
+
+Overview hero image supplied by the app owner (AI-generated trail-rider scene).
+Converted from the original 1152 x 768 PNG to JPEG for faster loading.
+The Overview uses a CSS crop and dark gradient overlay; the image is otherwise unchanged.
+No third-party photo credit is required for this asset.
